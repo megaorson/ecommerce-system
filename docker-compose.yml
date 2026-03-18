@@ -2,16 +2,39 @@ version: "3.9"
 
 services:
 
-  mysql-magento:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: erp
+      POSTGRES_USER: erp
+      POSTGRES_PASSWORD: erp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mysql_pim:
     image: mysql:8.0
-    container_name: mysql-magento
+    container_name: mysql_pim
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ecommerce
+      MYSQL_DATABASE: pim
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_pim_data:/var/lib/mysql
+
+  mysql_magento:
+    image: mysql:8.0
+    container_name: mysql_magento
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: magento
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_magento_data:/var/lib/mysql
 
   redis-magento:
     image: redis:7
@@ -24,34 +47,69 @@ services:
       - "15672:15672" # UI
 
   erp:
-    build: ./erp-symfony/image
+    build:
+      context: ./erp-symfony
+      dockerfile: image/Dockerfile
     container_name: erp
     volumes:
       - ./erp-symfony:/var/www
     depends_on:
-      - mysql
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://erp:erp@postgres:5432/erp"
     expose:
       - "9000"
 
   pim:
-    build: ./pim-laravel/image
+    build:
+      context: ./pim-laravel
+      dockerfile: image/Dockerfile
     container_name: pim
     volumes:
       - ./pim-laravel:/var/www
     depends_on:
-      - mysql
+      - mysql_pim
+    environment:
+      DB_HOST: mysql_pim
+      DB_DATABASE: pim
+      DB_USERNAME: root
+      DB_PASSWORD: root
     expose:
       - "9000"
 
   magento:
-    build: ./magento-store/image
+    build:
+      context: ./magento-store
+      dockerfile: image/Dockerfile
     container_name: magento
     volumes:
       - ./magento-store:/var/www
     depends_on:
-      - mysql
+      - mysql_magento
+    environment:
+      DB_HOST: mysql_magento
+      DB_NAME: magento
+      DB_USER: root
+      DB_PASSWORD: root
     expose:
       - "9000"
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./erp-symfony/src:/var/www/erp
+      - ./pim-laravel/src:/var/www/pim
+      - ./magento-store/src:/var/www/magento
+    depends_on:
+      - erp
+      - pim
+      - magento
+
 volumes:
-  mysql_data:
+  postgres_data:
+  mysql_pim_data:
+  mysql_magento_data:

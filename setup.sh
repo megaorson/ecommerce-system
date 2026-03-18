@@ -25,6 +25,27 @@ clone_or_update () {
   fi
 }
 
+update_hosts() {
+  echo "🌐 Updating /etc/hosts..."
+
+  HOSTS_FILE="/etc/hosts"
+
+  DOMAINS=(
+    "erp.local"
+    "pim.local"
+    "magento.local"
+  )
+
+  for DOMAIN in "${DOMAINS[@]}"; do
+    if ! grep -q "$DOMAIN" $HOSTS_FILE; then
+      echo "➕ Adding $DOMAIN to hosts"
+      echo "127.0.0.1 $DOMAIN" | sudo tee -a $HOSTS_FILE > /dev/null
+    else
+      echo "✔ $DOMAIN already exists"
+    fi
+  done
+}
+
 # --- CLONE OR UPDATE ---
 clone_or_update "erp-symfony" $ERP_REPO
 clone_or_update "pim-laravel" $PIM_REPO
@@ -37,10 +58,9 @@ then
     exit
 fi
 
-echo "🐳 Building containers..."
-docker-compose build
+echo "🐳 Building & Starting containers..."
+make rebuild
 
-echo "🐳 Starting containers..."
-docker-compose up -d
+update_hosts
 
 echo "✅ Setup complete!"
