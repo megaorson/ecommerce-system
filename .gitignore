@@ -1,0 +1,21 @@
+# Ignore service repositories (they are separate repos)
+erp-symfony/*
+pim-laravel/*
+magento-store/*
+
+# But keep folders themselves
+!erp-symfony/.gitkeep
+!pim-laravel/.gitkeep
+!magento-store/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-data/
+*.log
+
+# Env files
+.env
+.env.local

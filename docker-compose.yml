@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+
+  mysql-magento:
+    image: mysql:8.0
+    container_name: mysql-magento
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis-magento:
+    image: redis:7
+    container_name: redis-magento
+
+  rabbitmq-magento:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-magento
+    ports:
+      - "15672:15672" # UI
+
+  erp:
+    build: ./erp-symfony/image
+    container_name: erp
+    volumes:
+      - ./erp-symfony:/var/www
+    depends_on:
+      - mysql
+    expose:
+      - "9000"
+
+  pim:
+    build: ./pim-laravel/image
+    container_name: pim
+    volumes:
+      - ./pim-laravel:/var/www
+    depends_on:
+      - mysql
+    expose:
+      - "9000"
+
+  magento:
+    build: ./magento-store/image
+    container_name: magento
+    volumes:
+      - ./magento-store:/var/www
+    depends_on:
+      - mysql
+    expose:
+      - "9000"
+
+volumes:
+  mysql_data:
