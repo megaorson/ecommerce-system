@@ -31,10 +31,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
     ports:
       - "3308:3306"
     volumes:
       - mysql_magento_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
 
   redis-magento:
     image: redis:7
@@ -44,7 +47,10 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq-magento
     ports:
-      - "15672:15672" # UI
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: magento
+      RABBITMQ_DEFAULT_PASS: magento
 
   erp:
     build:
@@ -52,7 +58,7 @@ services:
       dockerfile: image/Dockerfile
     container_name: erp
     volumes:
-      - ./erp-symfony:/var/www
+      - ./erp-symfony/src:/var/www/erp
     depends_on:
       - postgres
     environment:
@@ -66,7 +72,7 @@ services:
       dockerfile: image/Dockerfile
     container_name: pim
     volumes:
-      - ./pim-laravel:/var/www
+      - ./pim-laravel/src:/var/www/pim
     depends_on:
       - mysql_pim
     environment:
@@ -83,14 +89,14 @@ services:
       dockerfile: image/Dockerfile
     container_name: magento
     volumes:
-      - ./magento-store:/var/www
+      - ./magento-store/src:/var/www/magento
     depends_on:
       - mysql_magento
     environment:
       DB_HOST: mysql_magento
       DB_NAME: magento
-      DB_USER: root
-      DB_PASSWORD: root
+      DB_USER: magento
+      DB_PASSWORD: magento
     expose:
       - "9000"
 
@@ -108,6 +114,15 @@ services:
       - erp
       - pim
       - magento
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+    ports:
+      - "9200:9200"
 
 volumes:
   postgres_data:

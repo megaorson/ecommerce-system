@@ -104,21 +104,6 @@ make logs
 
 ---
 
-## 📁 Project Structure
-
-.
-├── docker/
-│   └── nginx/
-│       └── conf.d/
-├── erp-symfony/
-├── pim-laravel/
-├── magento-store/
-├── docker-compose.yml
-├── Makefile
-├── setup.sh
-
----
-
 ## 🌐 Local Domains
 
 127.0.0.1 erp.local
@@ -149,7 +134,7 @@ make logs
 ## 🧠 Notes
 
 - Each service runs in isolation
-- Nginx acts as a single entry point
+- Nginx acts as a single entry point, I think about nginx/apache for each service, but it's for local development
 - PHP-FPM is used instead of HTTP proxying
 - Designed to be close to production setup
 
