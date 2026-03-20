@@ -38,6 +38,7 @@ services:
     volumes:
       - mysql_magento_data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./magento-store/db:/docker-entrypoint-initdb.d
 
   redis-magento:
     image: redis:7
@@ -54,7 +55,7 @@ services:
 
   erp:
     build:
-      context: ./erp-symfony
+      context: ./docker/erp-symfony
       dockerfile: image/Dockerfile
     container_name: erp
     volumes:
@@ -68,7 +69,7 @@ services:
 
   pim:
     build:
-      context: ./pim-laravel
+      context: ./docker/pim-laravel
       dockerfile: image/Dockerfile
     container_name: pim
     volumes:
@@ -85,7 +86,7 @@ services:
 
   magento:
     build:
-      context: ./magento-store
+      context: ./docker/magento-store
       dockerfile: image/Dockerfile
     container_name: magento
     volumes:
