@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   postgres:
-    image: postgres:15
+    image: postgres:16
     container_name: postgres
     environment:
       POSTGRES_DB: erp
@@ -62,8 +62,6 @@ services:
       - ./erp-symfony/src:/var/www/erp
     depends_on:
       - postgres
-    environment:
-      DATABASE_URL: "postgresql://erp:erp@postgres:5432/erp"
     expose:
       - "9000"
 

@@ -55,6 +55,7 @@ chmod +x setup.sh
 This will:
 
 - Clone all service repositories
+- Setup default magento database (no products)
 - Configure local domains (/etc/hosts)
 - Build and start Docker containers
 
@@ -126,7 +127,7 @@ make logs
 - OAuth authentication between services
 - API Gateway / BFF layer
 - Message broker (RabbitMQ)
-- Frontend (Next.js)
+- Frontend (Next.js or React.js)
 - CI/CD pipeline
 
 ---
@@ -134,7 +135,7 @@ make logs
 ## 🧠 Notes
 
 - Each service runs in isolation
-- Nginx acts as a single entry point, I think about nginx/apache for each service, but it's for local development
+- Nginx acts as a single entry point
 - PHP-FPM is used instead of HTTP proxying
 - Designed to be close to production setup
 
