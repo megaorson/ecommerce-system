@@ -20,6 +20,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pim
+      MYSQL_USER: pim
+      MYSQL_PASSWORD: pim
     ports:
       - "3307:3306"
     volumes:
@@ -67,11 +69,11 @@ services:
 
   pim:
     build:
-      context: ./docker/pim-laravel
+      context: ./docker/pim-symfony
       dockerfile: image/Dockerfile
     container_name: pim
     volumes:
-      - ./pim-laravel/src:/var/www/pim
+      - ./pim-symfony/src:/var/www/pim
     depends_on:
       - mysql_pim
     environment:
@@ -107,7 +109,7 @@ services:
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./erp-symfony/src:/var/www/erp
-      - ./pim-laravel/src:/var/www/pim
+      - ./pim-symfony/src:/var/www/pim
       - ./magento-store/src:/var/www/magento
     depends_on:
       - erp

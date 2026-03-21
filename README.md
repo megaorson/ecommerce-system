@@ -52,6 +52,8 @@ cd ecommerce-system
 chmod +x setup.sh
 ./setup.sh
 
+cp .env.local .env and fill your pub and private key from magento https://marketplace.magento.com/customer/accessKeys/
+
 This will:
 
 - Clone all service repositories

@@ -4,7 +4,7 @@ set -e
 
 # --- CONFIG ---
 ERP_REPO="https://github.com/megaorson/erp-symfony.git"
-PIM_REPO="https://github.com/megaorson/pim-laravel.git"
+PIM_REPO="https://github.com/megaorson/pim-symfony.git"
 MAGENTO_REPO="https://github.com/megaorson/magento-store.git"
 
 # --- FUNCTION ---
@@ -46,7 +46,7 @@ update_hosts() {
 
 # --- CLONE OR UPDATE ---
 clone_or_update "erp-symfony" $ERP_REPO
-clone_or_update "pim-laravel" $PIM_REPO
+clone_or_update "pim-symfony" $PIM_REPO
 clone_or_update "magento-store" $MAGENTO_REPO
 
 # --- DOCKER ---
