@@ -1,29 +1,60 @@
-# 🛒 E-commerce System (Microservices Pet Project)
+# 🚀 Microservices E-commerce System (Symfony + Magento)
 
-This is a multi-service e-commerce system built with a microservices-like architecture.
+![PHP](https://img.shields.io/badge/PHP-8.3-blue)
+![Symfony](https://img.shields.io/badge/Symfony-6+-black)
+![Magento](https://img.shields.io/badge/Magento-2-orange)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![Architecture](https://img.shields.io/badge/Architecture-Microservices-green)
+
+---
+
+## 🧩 Overview
+
+This project is a microservices-based e-commerce platform designed to simulate a real-world scalable architecture.
+
+---
 
 ## 🧩 Services
 
-- ERP – built with Symfony (business logic, orders, API)
-- PIM – built with Laravel (product data, attributes)
-- Storefront – Magento 2 (frontend + checkout)
+| Service | Stack | Responsibility |
+|--------|------|---------------|
+| ERP | Symfony | Orders, business logic, APIs |
+| PIM | Symfony | Products, attributes, variants |
+| Storefront | Magento 2 | UI, checkout |
 
 ---
 
 ## 🏗️ Architecture
 
+```
                 Nginx (gateway)
                       |
      -------------------------------------
      |              |                    |
-  ERP (Symfony)  PIM (Laravel)   Magento (Store)
+  ERP (Symfony)  PIM (Symfony)   Magento (Store)
      |              |                    |
- Postgres        MySQL              MySQL
+ Postgres         MySQL                 MySQL
+```
 
-- Single entry point via Nginx
-- Services communicate via API
-- Each service has its own database
-- PHP-FPM used for all PHP services
+---
+
+## 🔄 Data Flow
+
+```
+PIM → Magento (product sync)
+Magento → ERP (orders)
+ERP → PIM (product updates)
+```
+
+---
+
+## 🧠 PIM Design
+
+```
+Product
+ └── SKU (variant)
+      └── Attribute Values
+```
 
 ---
 
@@ -32,114 +63,77 @@ This is a multi-service e-commerce system built with a microservices-like archit
 - Docker / Docker Compose
 - Nginx (reverse proxy)
 - PHP-FPM
-- Symfony
-- Laravel
+- Symfony (ERP + PIM)
 - Magento 2
+- PostgreSQL / MySQL
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone repository
+### Clone repo
 
+```
 git clone https://github.com/megaorson/ecommerce-system
 cd ecommerce-system
+```
 
 ---
 
-### 2. Run setup
+### Setup
 
+```
 chmod +x setup.sh
 ./setup.sh
-
-cp .env.local .env and fill your pub and private key from magento https://marketplace.magento.com/customer/accessKeys/
-
-This will:
-
-- Clone all service repositories
-- Setup default magento database (no products)
-- Configure local domains (/etc/hosts)
-- Build and start Docker containers
+```
 
 ---
 
-## 🌐 Available Services
+### Magento keys
 
-After setup:
+```
+cp .env.local .env 
+enter your pub and private key from magento https://marketplace.magento.com/customer/accessKeys/
+```
+
+---
+
+## 🌐 Services
 
 - http://erp.local
-- http://pim.local
+- http://pim.local/
 - http://magento.local
 
 ---
 
-## 🐳 Docker Commands
+## 🐳 Docker
 
-We use Makefile for better developer experience.
-
-### Start containers
-
+```
 make dev
-
----
-
-### Rebuild containers
-
 make rebuild
-
----
-
-### Reset environment (clean state)
-
 make reset
-
----
-
-### Stop containers
-
 make stop
-
----
-
-### View logs
-
 make logs
+```
 
 ---
 
-## 🌐 Local Domains
+## 🧠 Key Concepts
 
-127.0.0.1 erp.local
-127.0.0.1 pim.local
-127.0.0.1 magento.local
-
----
-
-## 💡 Goals of the Project
-
-- Practice microservice architecture
-- Integrate multiple PHP frameworks
-- Simulate real-world e-commerce system
-- Improve DevOps & DX (Developer Experience)
+- PIM = Single Source of Truth
+- ERP = Business Logic
+- Magento = Presentation Layer
+- API-first communication
 
 ---
 
-## 🔥 Future Improvements
+## 🔥 Future
 
-- OAuth authentication between services
-- API Gateway / BFF layer
-- Message broker (RabbitMQ)
-- Frontend (Next.js or React.js)
-- CI/CD pipeline
-
----
-
-## 🧠 Notes
-
-- Each service runs in isolation
-- Nginx acts as a single entry point
-- PHP-FPM is used instead of HTTP proxying
-- Designed to be close to production setup
+- OAuth / JWT
+- Event-driven (RabbitMQ)
+- GraphQL BFF
+- React / Next.js frontend
+- CI/CD
 
 ---
 
