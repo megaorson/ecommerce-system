@@ -74,6 +74,7 @@ services:
     container_name: pim
     volumes:
       - ./pim-symfony:/var/www/pim
+      - ./docker/pim-symfony/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     depends_on:
       - mysql_pim
     environment:
@@ -83,6 +84,8 @@ services:
       DB_PASSWORD: root
     expose:
       - "9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   magento:
     build:
