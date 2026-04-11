@@ -75,6 +75,7 @@ services:
     volumes:
       - ./pim-symfony:/var/www/pim
       - ./docker/pim-symfony/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./docker/pim-symfony/conf.d/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
     depends_on:
       - mysql_pim
     environment:
